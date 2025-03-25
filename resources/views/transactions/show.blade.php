@@ -1,15 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        @media print {
+
+            nav,
+            .btn,
+            footer {
+                display: none !important;
+            }
+
+            .container-fluid {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            .card-header {
+                background-color: #f1f1f1 !important;
+                color: #000 !important;
+            }
+
+            body {
+                background-color: white !important;
+            }
+        }
+    </style>
     <div class="container-fluid mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Transaction Details</h2>
-            <div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <h2 class="h3 mb-0">Transaction Details</h2>
+            <div class="d-flex flex-wrap gap-2">
                 <a href="{{ route('transactions.index') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Transactions
+                    <i class="fas fa-arrow-left"></i> <span class="d-none d-sm-inline">Back</span>
                 </a>
-                <button class="btn btn-primary ms-2" onclick="window.print()">
-                    <i class="fas fa-print"></i> Print Receipt
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="fas fa-print"></i> <span class="d-none d-sm-inline">Print</span>
                 </button>
             </div>
         </div>
@@ -53,15 +83,15 @@
                             </tr>
                             <tr>
                                 <th>Amount:</th>
-                                <td>{{ number_format($transaction->amount, 2) }}</td>
+                                <td>{{ number_format($transaction->amount) }}</td>
                             </tr>
                             <tr>
                                 <th>Fee:</th>
-                                <td>{{ number_format($transaction->fee, 2) }}</td>
+                                <td>{{ number_format($transaction->fee) }}</td>
                             </tr>
                             <tr>
                                 <th>Net Amount:</th>
-                                <td>{{ number_format($transaction->amount_after_fee, 2) }}</td>
+                                <td>{{ number_format($transaction->amount_after_fee) }}</td>
                             </tr>
                             <tr>
                                 <th>Reference:</th>
@@ -224,7 +254,7 @@
                                                             {{ ucfirst($detail->type) }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ number_format($detail->amount, 2) }}</td>
+                                                    <td>{{ number_format($detail->amount) }}</td>
                                                     <td>{{ $detail->reference ?? 'N/A' }}</td>
                                                 </tr>
                                             @empty
@@ -257,7 +287,7 @@
                                                                     <div>
                                                                         <strong>{{ $detail->floatAccount->name }}</strong>
                                                                         <br>
-                                                                        <small>Amount: {{ number_format($detail->amount, 2) }}</small>
+                                                                        <small>Amount: {{ number_format($detail->amount) }}</small>
                                                                     </div>
                                                                     <div>
                                                                         @if(in_array(pathinfo($detail->proof_path, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png']))
@@ -293,7 +323,7 @@
                                                                     <div>
                                                                         <strong>{{ $counterpart->floatAccount->name }}</strong>
                                                                         <br>
-                                                                        <small>Amount: {{ number_format($counterpart->amount, 2) }}</small>
+                                                                        <small>Amount: {{ number_format($counterpart->amount) }}</small>
                                                                     </div>
                                                                     <div>
                                                                         @if(in_array(pathinfo($counterpart->proof_path, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png']))
@@ -360,7 +390,7 @@
                                         @if(!$transaction->isCounterpartComplete())
                                             <a href="{{ route('transactions.add-counterpart', $transaction->uuid) }}"
                                                 class="btn btn-primary btn-sm">
-                                                <i class="fas fa-plus"></i> Add Counterpart
+                                                <i class="fas fa-plus"></i>
                                             </a>
                                         @endif
                                     </div>
@@ -381,7 +411,7 @@
                                                     <tr>
                                                         <td>{{ $counterpart->floatAccount->name }}</td>
                                                         <td>{{ $counterpart->floatAccount->bank->name }}</td>
-                                                        <td>{{ number_format($counterpart->amount, 2) }}</td>
+                                                        <td>{{ number_format($counterpart->amount) }}</td>
                                                         <td>{{ $counterpart->created_at->format('Y-m-d H:i:s') }}</td>
                                                     </tr>
                                                 @endforeach
@@ -390,11 +420,11 @@
                                                 <tr>
                                                     <th colspan="2">Total Counterpart Amount:</th>
                                                     <td colspan="2">
-                                                        {{ number_format($transaction->getTotalCounterpartAmount(), 2) }}
+                                                        {{ number_format($transaction->getTotalCounterpartAmount()) }}
                                                         @if(!$transaction->isCounterpartComplete())
                                                             <span class="badge bg-warning ms-2">
                                                                 Pending:
-                                                                {{ number_format($transaction->amount - $transaction->getTotalCounterpartAmount(), 2) }}
+                                                                {{ number_format($transaction->amount - $transaction->getTotalCounterpartAmount()) }}
                                                             </span>
                                                         @endif
                                                     </td>
@@ -420,36 +450,4 @@
                 </div>
             </div>
         @endif
-
-
-    <style>
-        @media print {
-
-            nav,
-            .btn,
-            footer {
-                display: none !important;
-            }
-
-            .container-fluid {
-                width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            .card {
-                border: none !important;
-                box-shadow: none !important;
-            }
-
-            .card-header {
-                background-color: #f1f1f1 !important;
-                color: #000 !important;
-            }
-
-            body {
-                background-color: white !important;
-            }
-        }
-    </style>
 @endsection

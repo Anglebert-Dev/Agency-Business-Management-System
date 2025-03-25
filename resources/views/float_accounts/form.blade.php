@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>{{ $floatAccount->uuid ? 'Edit Float Account' : 'Add New Float Account' }}</h1>
             <a href="{{ route('float_accounts.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Back to Float Accounts
+                <i class="fas fa-arrow-left"></i> 
             </a>
         </div>
 

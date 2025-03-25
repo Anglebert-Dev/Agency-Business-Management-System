@@ -1,74 +1,101 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @media (max-width: 767px) {
+        .table-responsive {
+            margin: 1rem 0;
+        }
+        .table td, .table th {
+            min-width: 120px;
+        }
+        .table td:last-child {
+            min-width: 100px;
+        }
+        .badge {
+            white-space: normal;
+            text-align: left;
+        }
+    }
+</style>
     <div class="container-fluid mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Customers</h1>
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <h2 class="h3 mb-0">Customers</h2>
             <a href="{{ route('customers.edit') }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Add New Customer
+                <i class="fas fa-plus"></i> <span class="d-none d-sm-inline">New Customer</span>
             </a>
         </div>
 
         <div class="card">
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Account Numbers</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($customers as $customer)
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
                             <tr>
-                                <td>{{ $customer->name }}</td>
-                                <td>{{ $customer->email }}</td>
-                                <td>{{ $customer->phone }}</td>
-                                <td>
-                                    @if(isset($customer->params['account_numbers']))
-                                        @foreach($customer->params['account_numbers'] as $account)
-                                            <div class="mb-1">
-                                                <span class="badge bg-light text-dark">
-                                                    @if(isset($account['bank_id']) && isset($ordered_banks) && isset($ordered_banks[$account['bank_id']]))
-                                                        {{ $ordered_banks[$account['bank_id']]->name }}:
-                                                    @endif
-                                                    {{ $account['number'] ?? 'No account number' }}
-                                                </span>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <span class="text-muted">No accounts</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ route('customers.edit', $customer->uuid) }}"
-                                        class="btn btn-sm btn-warning">Edit</a>
-                                    <button class="btn btn-sm btn-danger delete-customer"
-                                        data-customer-uuid="{{ $customer->uuid }}" data-customer-name="{{ $customer->name }}">
-                                        Delete
-                                    </button>
-                                </td>
+                                <th class="px-3">Name</th>
+                                <th class="px-3">Email</th>
+                                <th class="px-3">Phone</th>
+                                <th class="px-3">Account Numbers</th>
+                                <th class="px-3">Actions</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center py-4">
-                                    <div class="text-muted">
-                                        <i class="fas fa-users fa-2x mb-3 d-block"></i>
-                                        No customers registered yet
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @forelse($customers as $customer)
+                                <tr>
+                                    <td class="px-3">{{ $customer->name }}</td>
+                                    <td class="px-3">{{ $customer->email }}</td>
+                                    <td class="px-3">{{ $customer->phone }}</td>
+                                    <td class="px-3">
+                                        @if(isset($customer->params['account_numbers']))
+                                            @foreach($customer->params['account_numbers'] as $account)
+                                                <div class="mb-1">
+                                                    <span class="badge bg-light text-dark">
+                                                        @if(isset($account['bank_id']) && isset($ordered_banks) && isset($ordered_banks[$account['bank_id']]))
+                                                            {{ $ordered_banks[$account['bank_id']]->name }}:
+                                                        @endif
+                                                        {{ $account['number'] ?? 'No account number' }}
+                                                    </span>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted">No accounts</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-3">
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <a href="{{ route('customers.edit', $customer->uuid) }}"
+                                                class="btn btn-sm btn-warning"
+                                                data-bs-toggle="tooltip"
+                                                title="Edit Customer">
+                                                <i class="fas fa-edit"></i> <span class="d-none d-sm-inline">Edit</span>
+                                            </a>
+                                            <button class="btn btn-sm btn-danger delete-customer"
+                                                data-customer-uuid="{{ $customer->uuid }}" 
+                                                data-customer-name="{{ $customer->name }}"
+                                                data-bs-toggle="tooltip"
+                                                title="Delete Customer">
+                                                <i class="fas fa-trash"></i> <span class="d-none d-sm-inline">Delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="text-muted">
+                                            <i class="fas fa-users fa-2x mb-3 d-block"></i>
+                                            No customers registered yet
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -91,9 +118,14 @@
         </div>
     </div>
 
-    @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+                // Initialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl)
+                });
+
                 // Delete customer modal handling
                 const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
                 const deleteButtons = document.querySelectorAll('.delete-customer');
@@ -112,5 +144,4 @@
                 });
             });
         </script>
-    @endpush
 @endsection

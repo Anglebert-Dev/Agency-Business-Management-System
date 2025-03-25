@@ -1,4 +1,3 @@
-{{-- resources/views/transactions/create.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -7,17 +6,6 @@
             <div class="card-header">
                 <h4>Create New Transaction</h4>
             </div>
-            <div class="card-body">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <form method="POST" action="{{ route('transactions.create') }}" id="transaction-form" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-4">
@@ -219,7 +207,7 @@
                                                             <option value="{{ $account->id }}"
                                                                 data-balance="{{ $account->balance }}">
                                                                 {{ $account->name }} ({{ $account->bank->name }}) - Balance:
-                                                                {{ number_format($account->balance, 2) }}
+                                                                {{ number_format($account->balance) }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -301,7 +289,7 @@
                                                             <option value="{{ $account->id }}"
                                                                 data-balance="{{ $account->balance }}">
                                                                 {{ $account->name }} ({{ $account->bank->name }}) - Balance:
-                                                                {{ number_format($account->balance, 2) }}
+                                                                {{ number_format($account->balance) }}
                                                             </option>
                                                         @endforeach
                                                     </select>

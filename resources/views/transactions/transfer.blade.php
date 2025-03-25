@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Float Account Transfer</h1>
         <a href="{{ route('float_accounts.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Float Accounts
+            <i class="fas fa-arrow-left"></i> 
         </a>
     </div>
 
@@ -22,8 +22,9 @@
                         @foreach($floatAccounts as $account)
                             <option value="{{ $account->id }}" 
                                 data-currency="{{ $account->currency }}"
-                                data-balance="{{ $account->balance }}">
-                                {{ $account->name }} ({{ $account->currency }} {{ number_format($account->balance, 2) }})
+                                data-balance="{{ $account->balance }}"
+                                data-account-id="{{ $account->id }}">
+                                {{ $account->name }} ({{ $account->currency }} {{ number_format($account->balance) }})
                             </option>
                         @endforeach
                     </select>
@@ -39,7 +40,8 @@
                         <option value="">Select destination account</option>
                         @foreach($floatAccounts as $account)
                             <option value="{{ $account->id }}" 
-                                data-currency="{{ $account->currency }}">
+                                data-currency="{{ $account->currency }}"
+                                data-account-id="{{ $account->id }}">
                                 {{ $account->name }} ({{ $account->currency }})
                             </option>
                         @endforeach
@@ -84,13 +86,19 @@
             const destOption = destSelect.selectedOptions[0];
             
             if (sourceOption && destOption) {
+                if(sourceOption.dataset.accountId && destOption.dataset.accountId && sourceOption.dataset.accountId === destOption.dataset.accountId) {
+                    alert('Source and destination accounts cannot be the same.');
+                    destSelect.value = '';
+                    return;
+                }
                 const sourceCurrency = sourceOption.dataset.currency;
                 const destCurrency = destOption.dataset.currency;
                 
-                if (sourceCurrency !== destCurrency) {
+                if (sourceCurrency != undefined && destCurrency != undefined && sourceCurrency !== destCurrency) {
                     alert('Currency mismatch! Transfers must be between accounts with the same currency.');
                     destSelect.value = '';
                 }
+            
             }
         }
         
