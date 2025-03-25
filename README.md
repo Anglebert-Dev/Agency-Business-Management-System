@@ -62,7 +62,7 @@ This is a comprehensive Laravel-based agency business management system designed
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/agency-business-app.git
+git clone https://github.com/Anglebert-Dev/Agency-Business-Management-System.git
 cd agency-business-app
 ```
 
@@ -155,6 +155,4 @@ npm run dev
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
-Your Name - your.email@example.com
-
-Project Link: [https://github.com/yourusername/agency-business-app](https://github.com/yourusername/agency-business-app)
+Anglebert - anglebertsh@gmail.com
