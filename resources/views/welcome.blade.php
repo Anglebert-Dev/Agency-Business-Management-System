@@ -8,7 +8,7 @@
                 <div class="card-body p-5">
                     <div class="row">
                         <div class="col-lg-6">
-                            <h1 class="display-4 fw-bold text-primary mb-4"> Kibasumba Business App</h1>
+                            <h1 class="display-4 fw-bold text-primary mb-4"> Agency Management App</h1>
                             <p class="lead text-muted mb-4">Streamline your agency operations with our comprehensive management solution. Handle transactions, manage customers, and track float accounts efficiently.</p>
                             
                             @guest
